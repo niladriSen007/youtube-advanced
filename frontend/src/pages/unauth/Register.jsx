@@ -1,11 +1,16 @@
 import { useRef, useState } from "react"
 import axios from "axios"
-import Button from "../components/shared/Button"
+import Button from "../../components/shared/Button"
+import { useNavigate } from "react-router-dom"
+import { API_PORT } from "../../utils/apiCalls"
 const Register = () => {
   const imageRef = useRef(null)
   const coverImageRef = useRef(null)
+
+  const navigate = useNavigate()
   const [avatarImg, setAvatarImg] = useState(null)
   const [coverImg, setCoverImg] = useState(null)
+  const [isLoading, setIsLoading] = useState(false)
   const [formData, setFormData] = useState({
     fullname: "",
     username: "",
@@ -18,17 +23,27 @@ const Register = () => {
   const formDataForApi = new FormData()
 
   const onSubmit = async (e) => {
+    setIsLoading(true)
     e.preventDefault()
     formDataForApi.append("fullname", formData.fullname)
     formDataForApi.append("username", formData.username)
     formDataForApi.append("email", formData.email)
     formDataForApi.append("password", formData.password)
+    formDataForApi.append("avatar", formData.avatar)
+    formDataForApi.append("coverImage", formData.coverImage)
+    /*   console.log(formDataForApi.get("email")) */
 
-    const { data } = await axios.post(
-      "http://localhost:8000/api/v1/user/register",
-      formDataForApi
-    )
-    console.log(data)
+    try {
+      const { data } = await axios.post(
+        `${API_PORT}/user/register`,
+        formDataForApi
+      )
+      console.log(data)
+      setIsLoading(false)
+      navigate("/auth/login")
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   const handleImageChange = (e) => {
@@ -42,16 +57,19 @@ const Register = () => {
   }
 
   const uploadImage = async () => {
-    const uploadedFile = imageRef.current.files[0]
-    console.log(uploadedFile)
-    setAvatarImg(URL.createObjectURL(uploadedFile))
+    const uploadedFile = imageRef.current?.files[0]
+    setFormData({ ...formData, avatar: uploadedFile })
     formDataForApi.append("avatar", uploadedFile)
+    /*  console.log(formDataForApi.get("avatar"))
+    console.log(uploadedFile) */
+    setAvatarImg(URL.createObjectURL(uploadedFile))
     /*  const cachedURL = URL.createObjectURL(uploadedFile) */
     /* setFormData({ ...formData, avatar: uploadedFile }) */
   }
 
   const uploadCoverImage = async () => {
-    const uploadedFile = coverImageRef.current.files[0]
+    const uploadedFile = coverImageRef.current?.files[0]
+    setFormData({ ...formData, coverImage: uploadedFile })
     console.log(uploadedFile)
     setCoverImg(URL.createObjectURL(uploadedFile))
     formDataForApi.append("coverImage", uploadedFile)
@@ -68,7 +86,7 @@ const Register = () => {
           <input
             type="text"
             id="fullname"
-            className="rounded-md px-2 p-1"
+            className="rounded-md px-2 p-1 text-black"
             name="fullname"
             value={formData?.fullname}
             onChange={(e) =>
@@ -81,7 +99,7 @@ const Register = () => {
           <input
             type="text"
             id="username"
-            className="rounded-md px-2 p-1"
+            className="rounded-md px-2 p-1 text-black"
             name="username"
             value={formData?.username}
             onChange={(e) =>
@@ -93,7 +111,7 @@ const Register = () => {
           <label htmlFor="email">Email</label>
           <input
             type="email"
-            className="rounded-md px-2 p-1"
+            className="rounded-md px-2 p-1 text-black"
             id="email"
             name="email"
             value={formData?.email}
@@ -106,7 +124,7 @@ const Register = () => {
           <label htmlFor="password">Password</label>
           <input
             type="password"
-            className="rounded-md px-2 p-1"
+            className="rounded-md px-2 p-1 text-black"
             id="password"
             name="password"
             value={formData?.password}
@@ -134,7 +152,7 @@ const Register = () => {
               className="w-64 h-40 object-cover rounded-md my-2"
             />
           )}
-          <Button onClick={handleImageChange} content="Upload" />
+          <Button onClick={handleImageChange} content="Upload Avatar Image" />
         </div>
 
         <div className="flex flex-col gap-1">
@@ -158,9 +176,12 @@ const Register = () => {
               className=" h-64 rounded-md object-cover my-2"
             />
           )}
-          <Button onClick={handleCoverImageChange} content="Upload" />
+          <Button
+            onClick={handleCoverImageChange}
+            content="Upload cover Image"
+          />
         </div>
-        <Button type="submit" content="Register" />
+        <Button type="submit" content="Register" isLoading={isLoading} />
       </form>
     </section>
   )
