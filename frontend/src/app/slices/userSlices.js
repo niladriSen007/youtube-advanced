@@ -16,10 +16,11 @@ export const userSlice = createSlice({
       const { type, payload } = action
       console.log(payload?.data?.user?._id, "Payload")
       const { user, refreshToken } = payload?.data
+      console.log(user,"Userrrr")
       return {
         ...state,
-        username: user?.username,
         userid: user?._id,
+        username: user?.username,
         refreshToken: refreshToken,
         useravatar: user?.avatar,
       }
