@@ -20,10 +20,10 @@ const Leftbar = ({expanded, setExpanded}) => {
   return (
     <>
       {expanded ? (
-        <section className="flex flex-col overflow-y-scroll pr-4 my-10">
+        <section className="flex flex-col overflow-y-scroll  pt-10">
           
 
-          <section className="border-b border-slate-600 my-4 pb-6 flex flex-col gap-2 pl-4 font-thin">
+          <section className="border-b border-slate-600 my-4 pb-6 flex flex-col gap-2 p-4 font-thin">
             <div className="leftbar-small-menu-section">
               <House /> <span>Home</span>
             </div>
