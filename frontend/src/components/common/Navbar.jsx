@@ -1,14 +1,26 @@
 /* eslint-disable react/prop-types */
-import { Menu, Search } from "lucide-react"
+import { Menu, MonitorUp, Search } from "lucide-react"
 import { useEffect, useRef, useState } from "react"
 import { useSelector } from "react-redux"
 import Modal from "../shared/Modal"
 import { Link } from "react-router-dom"
+import VideoUploadModal from "../videoupload/VideoUploadModal"
+import Button from "../shared/Button"
 
 const Navbar = ({ expanded, setExpanded }) => {
   const { useravatar } = useSelector((state) => state.user)
   const [openModal, setOpenModal] = useState(false)
+  const [videoOpenModal, setVideoOpenModal] = useState(false)
   const modalRef = useRef(null)
+
+  const handleClick = (e) => {
+    console.log(e.target.tagName)
+    if (e.target.tagName == "image") {
+      setOpenModal(!openModal)
+    } else if (e.target.tagName == "BUTTON") {
+      setVideoOpenModal(!videoOpenModal)
+    }
+  }
 
   useEffect(() => {
     const checkIfClickedOutside = (e) => {
@@ -59,14 +71,20 @@ const Navbar = ({ expanded, setExpanded }) => {
         />
         <Search className="bg-gray-800 rounded-r-full px-2" size={42} />
       </section>
-      <section className="relative">
+      <section
+        className="relative flex gap-12 items-center"
+        onClick={handleClick}
+      >
+        <Button content={"Upload"} size="medium"  />
+          
         <img
+          name="image"
           src={useravatar}
           alt=""
           className="size-10 object-cover rounded-full cursor-pointer "
-          onClick={() => setOpenModal(!openModal)}
         />
         {openModal && <Modal {...{ openModal, setOpenModal, modalRef }} />}
+        {videoOpenModal && <VideoUploadModal {...{setVideoOpenModal}} />}
       </section>
     </nav>
   )

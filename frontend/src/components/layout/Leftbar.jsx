@@ -11,22 +11,19 @@ import {
 } from "lucide-react"
 import { useState } from "react"
 import { useSelector } from "react-redux"
-import { useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 
-const Leftbar = ({expanded, setExpanded}) => {
-
-  const {userid} = useSelector((state) => state.user)
+const Leftbar = ({ expanded, setExpanded }) => {
+  const { userid } = useSelector((state) => state.user)
   const navigate = useNavigate()
   return (
     <>
       {expanded ? (
         <section className="flex flex-col overflow-y-scroll  pt-10">
-          
-
           <section className="border-b border-slate-600 my-4 pb-6 flex flex-col gap-2 p-4 font-thin">
-            <div className="leftbar-small-menu-section">
+            <Link to={"/home"} className="leftbar-small-menu-section">
               <House /> <span>Home</span>
-            </div>
+            </Link>
             <div className="leftbar-small-menu-section">
               <TvMinimalPlay /> <span>Shorts</span>
             </div>
@@ -38,7 +35,10 @@ const Leftbar = ({expanded, setExpanded}) => {
           {/*  Your channels */}
           <section className="border-b border-slate-600 my-4 pb-6 flex flex-col gap-2 pl-4 ">
             <h2 className="text-xl">You &nbsp; &gt;</h2>
-            <div className="leftbar-small-menu-section" onClick={()=>navigate(`/yourChannel/${userid}`)}>
+            <div
+              className="leftbar-small-menu-section"
+              onClick={() => navigate(`/yourChannel/${userid}`)}
+            >
               <TvMinimalPlay /> <span>Your Channel</span>
             </div>
             <div className="leftbar-small-menu-section">
@@ -97,9 +97,8 @@ const Leftbar = ({expanded, setExpanded}) => {
         </section>
       ) : (
         <section className="flex flex-col items-center gap-10 my-14 p-2 ">
-         
-        <section className="flex flex-col gap-8">
-        <div className="leftbar-small-menu-section-not-expanded">
+          <section className="flex flex-col gap-8">
+            <div className="leftbar-small-menu-section-not-expanded">
               <House /> <span className="text-xs">Home</span>
             </div>
             <div className="leftbar-small-menu-section-not-expanded">
@@ -108,7 +107,7 @@ const Leftbar = ({expanded, setExpanded}) => {
             <div className="leftbar-small-menu-section-not-expanded">
               <CalendarCheck /> <span className="text-xs">Subscriptions</span>
             </div>
-        </section>
+          </section>
         </section>
       )}
     </>
