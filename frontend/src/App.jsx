@@ -15,6 +15,7 @@ import Rightbar from "./components/layout/Rightbar.jsx"
 import YourChannel from "./pages/auth/YourChannel.jsx"
 import Navbar from "./components/common/Navbar.jsx"
 import { useSelector } from "react-redux"
+import ShortsDetails from "./pages/auth/ShortsDetails.jsx"
 
 export const App = () => {
   const UnAuthLayout = () => {
@@ -93,6 +94,10 @@ export const App = () => {
             </>
           ),
         },
+        {
+          path: "/shorts/:shortsId",
+          element: <ShortsDetails />,
+        }
       ],
     },
   ])

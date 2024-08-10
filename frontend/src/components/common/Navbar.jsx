@@ -15,7 +15,7 @@ const Navbar = ({ expanded, setExpanded }) => {
 
   const handleClick = (e) => {
     console.log(e.target.tagName)
-    if (e.target.tagName == "image") {
+    if (e.target.tagName == "IMG") {
       setOpenModal(!openModal)
     } else if (e.target.tagName == "BUTTON") {
       setVideoOpenModal(!videoOpenModal)
@@ -57,7 +57,7 @@ const Navbar = ({ expanded, setExpanded }) => {
             className="size-10 ovject-cover"
           />
           <Link to="/home" className="text-2xl">
-            VideoTube
+            ShortsTube
           </Link>
         </section>
       </section>

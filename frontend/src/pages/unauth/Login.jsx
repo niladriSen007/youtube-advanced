@@ -5,6 +5,7 @@ import axios from "axios"
 import { useSelector, useDispatch } from "react-redux"
 import { useNavigate } from "react-router-dom"
 import { currentUser } from "../../app/slices/userSlices"
+import { Loader2 } from "lucide-react"
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -71,7 +72,20 @@ const Login = () => {
             onChange={handleChange}
           />
         </div>
-        <Button content="Login" type="submit" isLoading={isLoading} />
+        <Button
+          content={
+            isLoading ? (
+              <p className=" flex items-center justify-center">
+                {" "}
+                <Loader2 />
+              </p>
+            ) : (
+              "Login"
+            )
+          }
+          type="submit"
+          isLoading={isLoading}
+        />
       </form>
     </section>
   )

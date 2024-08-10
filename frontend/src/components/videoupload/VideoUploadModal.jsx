@@ -10,7 +10,11 @@ const VideoUploadModal = ({ setVideoOpenModal }) => {
     description: "",
     videoFile: null,
     thumbnail: null,
+    tags: "",
   })
+
+  const [isUploading, setIsUploading] = useState(false)
+  const [videoTags, setVideoTags] = useState([])
 
   const videoInputRef = useRef(null)
   const thumbnailInputRef = useRef(null)
@@ -24,6 +28,7 @@ const VideoUploadModal = ({ setVideoOpenModal }) => {
   const { userid } = useSelector((state) => state?.user)
 
   const uploadVideo = async (e) => {
+    setIsUploading(true)
     e.preventDefault()
     e.stopPropagation()
     console.log(formData)
@@ -31,6 +36,7 @@ const VideoUploadModal = ({ setVideoOpenModal }) => {
     videoFormData.append("description", formData.description)
     videoFormData.append("videoFile", formData.videoFile)
     videoFormData.append("thumbnail", formData.thumbnail)
+    videoFormData.append("tags", videoTags)
     videoFormData.append("userId", userid)
     try {
       const { data } = await axios.post(
@@ -38,8 +44,11 @@ const VideoUploadModal = ({ setVideoOpenModal }) => {
         videoFormData
       )
       console.log(data)
+      setIsUploading(false)
+      setVideoOpenModal(false)
     } catch (error) {
       console.log(error)
+      setIsUploading(false)
     }
   }
   return (
@@ -48,11 +57,13 @@ const VideoUploadModal = ({ setVideoOpenModal }) => {
         <section className="flex items-center justify-between">
           <span>Upload your video</span>
           <span
-          className="cursor-pointer text-xl" 
+            className="cursor-pointer text-xl"
             onClick={() => {
               setVideoOpenModal(false)
             }}
-          >X</span>
+          >
+            X
+          </span>
         </section>
         <section className="flex flex-col gap-6 ">
           <section className="flex flex-col gap-2">
@@ -76,6 +87,34 @@ const VideoUploadModal = ({ setVideoOpenModal }) => {
               className="text-black"
             />
           </section>
+          <section className="flex flex-col gap-2">
+            <label htmlFor="description">Tags</label>
+            <input
+              type="text"
+              name="tags"
+              id="tags"
+              onChange={handleChange}
+              value={formData.tags}
+              className="text-black"
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  setVideoTags([...videoTags, e.target.value])
+                  setFormData({ ...formData, tags: "" })
+                  e.target.value = ""
+                }
+              }}
+            />
+            <p className="flex items-center gap-2">
+            {videoTags.map((tag, index) => (
+              <span
+                key={index}
+                className="bg-gray-700 text-white px-2 py-1 rounded-full"
+              >
+                {tag}
+              </span>
+            ))}
+            </p>
+          </section>
 
           <section className="flex flex-col gap-2">
             <label htmlFor="thumbnail">Thumbnail</label>
@@ -83,6 +122,7 @@ const VideoUploadModal = ({ setVideoOpenModal }) => {
               type="file"
               name="thumbnail"
               id="thumbnail"
+              accept="image/*"
               ref={thumbnailInputRef}
               /* className="hidden" */
               onChange={(e) => {
@@ -136,7 +176,7 @@ const VideoUploadModal = ({ setVideoOpenModal }) => {
           </section>
           <Button
             type="submit"
-            content={"Upload Video"}
+            content={isUploading ? "Uploading..." : "Upload Video"}
             onClick={uploadVideo}
           />
         </section>
